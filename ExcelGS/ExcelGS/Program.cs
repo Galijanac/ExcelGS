@@ -28,7 +28,7 @@ namespace ExcelGS
 
             for(int i = 2; i < columnNumber; i++)
             {
-                string currentSheet = (rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2;
+                string currentSheet = (rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2;
 
                 if (previousSheet.Equals(currentSheet))
                 {
