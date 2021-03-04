@@ -1,0 +1,7 @@
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\obj\Debug\ExcelGS.csprojAssemblyReference.cache
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\obj\Debug\ExcelGS.csproj.CoreCompileInputs.cache
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\bin\Debug\ExcelGS.exe.config
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\bin\Debug\ExcelGS.exe
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\bin\Debug\ExcelGS.pdb
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\obj\Debug\ExcelGS.exe
+C:\Users\Nikola\Desktop\Repositories\ExcelGS\ExcelGS\ExcelGS\obj\Debug\ExcelGS.pdb

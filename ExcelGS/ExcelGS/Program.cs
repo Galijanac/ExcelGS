@@ -1,22 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Runtime.InteropServices;
-using Excel = Microsoft.Office.Interop.Excel;
-using System.Configuration;
+﻿using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
+using System;
 
 namespace ExcelGS
 {
@@ -24,12 +8,37 @@ namespace ExcelGS
     {
         static void Main(string[] args)
         {
-            string path = Console.ReadLine();
-            int rowsRead = 1;
+            string path = @"";
+            int sheetNumber = 2;
+            int readThisColumn = 1;
 
             var xlApp = new Excel.Application();
             var xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
 
+            var xlWorkSheetRead = (Excel.Worksheet)xlWorkBookRead.Worksheets.get_Item(sheetNumber);
+            var rangeRead = xlWorkSheetRead.UsedRange;
+
+            int rowNumber = rangeRead.Rows.Count;
+            int columnNumber = rangeRead.Columns.Count;
+
+            Console.WriteLine((rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2);
+
+            string previousSheet = "";
+            int currentSheetNumber = xlApp.Sheets.Count;
+
+            for(int i = 2; i < columnNumber; i++)
+            {
+                string currentSheet = (rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2;
+
+                if (previousSheet.Equals(currentSheet))
+                {
+                    //write in it
+                }
+                else
+                {
+                    //create new sheet and write in it 
+                }
+            }
         }
     }
 }
