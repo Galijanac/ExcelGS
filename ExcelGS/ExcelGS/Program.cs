@@ -1,43 +1,83 @@
 ﻿using Excel = Microsoft.Office.Interop.Excel;
 using System.Reflection;
 using System;
+using System.Runtime.InteropServices;
 
 namespace ExcelGS
 {
     class Program
     {
+        public static Excel.Application xlApp;
+        public static Excel.Workbook xlWorkBookRead;
+        public static Excel.Worksheet xlWorkSheetRead;
+        public static Excel.Range rangeRead;
+
+        public static int rowNumberRead;
+        public static int columnNumberRead;
+
+        public static Excel.Worksheet xlWorkSheetWrite;
+
         static void Main(string[] args)
         {
-            string path = @"";
+            string path = @"C:\Users\Nikola\Downloads\text1.xlsx";
             int sheetNumber = 2;
             int readThisColumn = 1;
 
-            var xlApp = new Excel.Application();
-            var xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+            xlApp = new Excel.Application();
+            xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
 
-            var xlWorkSheetRead = (Excel.Worksheet)xlWorkBookRead.Worksheets.get_Item(sheetNumber);
-            var rangeRead = xlWorkSheetRead.UsedRange;
+            xlWorkSheetRead = (Excel.Worksheet)xlWorkBookRead.Worksheets.get_Item(sheetNumber);
+            rangeRead = xlWorkSheetRead.UsedRange;
 
-            int rowNumber = rangeRead.Rows.Count;
-            int columnNumber = rangeRead.Columns.Count;
+            rowNumberRead = rangeRead.Rows.Count;
+            columnNumberRead = rangeRead.Columns.Count;
 
             Console.WriteLine((rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2);
 
             string previousSheet = "";
             int currentSheetNumber = xlApp.Sheets.Count;
+            int counter = 1;
 
-            for(int i = 2; i < columnNumber; i++)
+            for(int i = 2; i <= rowNumberRead; i++)
             {
-                string currentSheet = (rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2;
+                string currentSheet = ((rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2).Replace('/','-');
 
                 if (previousSheet.Equals(currentSheet))
                 {
-                    //write in it
+
+                    WriteInSheet(i, counter);
+
+                    counter++;
                 }
                 else
                 {
-                    //create new sheet and write in it 
+                    counter = 1;
+                    Console.WriteLine(currentSheet);
+                    xlWorkSheetWrite = (Excel.Worksheet)xlApp.Worksheets.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                    xlWorkSheetWrite.Name = currentSheet;
+                    previousSheet = currentSheet;
+
+                    WriteInSheet(i, counter);
+
+                    counter++;
                 }
+            }
+            string p = path.Replace(".xlsx", "") + DateTime.Now.ToString(" dd.MM.yyyy hh.mm.ss") + ".xlsx";
+            xlApp.ActiveWorkbook.SaveAs(p);
+            xlWorkBookRead.Close(true, null, null);
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlWorkSheetWrite);
+            Marshal.ReleaseComObject(xlWorkSheetWrite);
+            Marshal.ReleaseComObject(xlWorkSheetRead);
+            Marshal.ReleaseComObject(xlWorkBookRead);
+            Marshal.ReleaseComObject(xlApp);
+        }
+
+        private static void WriteInSheet(int oldIndex,int newIndex)
+        {
+            for(int i = 1; i <= columnNumberRead; i++)
+            {
+                xlWorkSheetWrite.Cells[newIndex, i] = (rangeRead.Cells[oldIndex, i] as Excel.Range).Value2;
             }
         }
     }
