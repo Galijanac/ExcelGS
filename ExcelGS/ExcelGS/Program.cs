@@ -19,9 +19,15 @@ namespace ExcelGS
 
         static void Main(string[] args)
         {
-            string path = @"C:\Users\Nikola\Downloads\text1.xlsx";
-            int sheetNumber = 2;
-            int readThisColumn = 1;
+            //@"C:\Users\Nikola\Downloads\text1.xlsx"
+            Console.WriteLine("Input path");
+            string path = Console.ReadLine();
+            // 2
+            Console.WriteLine("Input sheet number");
+            int sheetNumber = int.Parse(Console.ReadLine());
+            // 1
+            Console.WriteLine("Input row");
+            int readThisColumn = int.Parse(Console.ReadLine());
 
             xlApp = new Excel.Application();
             xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
@@ -41,7 +47,7 @@ namespace ExcelGS
             for(int i = 2; i <= rowNumberRead; i++)
             {
                 string currentSheet = ((rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2).Replace('/','-');
-
+                Console.WriteLine(i);
                 if (previousSheet.Equals(currentSheet))
                 {
 
@@ -52,7 +58,6 @@ namespace ExcelGS
                 else
                 {
                     counter = 1;
-                    Console.WriteLine(currentSheet);
                     xlWorkSheetWrite = (Excel.Worksheet)xlApp.Worksheets.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
                     xlWorkSheetWrite.Name = currentSheet;
                     previousSheet = currentSheet;
