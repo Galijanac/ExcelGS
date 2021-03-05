@@ -29,53 +29,60 @@ namespace ExcelGS
             Console.WriteLine("Input row");
             int readThisColumn = int.Parse(Console.ReadLine());
 
-            xlApp = new Excel.Application();
-            xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
-
-            xlWorkSheetRead = (Excel.Worksheet)xlWorkBookRead.Worksheets.get_Item(sheetNumber);
-            rangeRead = xlWorkSheetRead.UsedRange;
-
-            rowNumberRead = rangeRead.Rows.Count;
-            columnNumberRead = rangeRead.Columns.Count;
-
-            Console.WriteLine((rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2);
-
-            string previousSheet = "";
-            int currentSheetNumber = xlApp.Sheets.Count;
-            int counter = 1;
-
-            for(int i = 2; i <= rowNumberRead; i++)
+            try
             {
-                string currentSheet = ((rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2).Replace('/','-');
-                Console.WriteLine(i);
-                if (previousSheet.Equals(currentSheet))
+                xlApp = new Excel.Application();
+                xlWorkBookRead = xlApp.Workbooks.Open(path, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+
+                xlWorkSheetRead = (Excel.Worksheet)xlWorkBookRead.Worksheets.get_Item(sheetNumber);
+                rangeRead = xlWorkSheetRead.UsedRange;
+
+                rowNumberRead = rangeRead.Rows.Count;
+                columnNumberRead = rangeRead.Columns.Count;
+
+                Console.WriteLine((rangeRead.Cells[1, readThisColumn] as Excel.Range).Value2);
+
+                string previousSheet = "";
+                int currentSheetNumber = xlApp.Sheets.Count;
+                int counter = 1;
+
+                for (int i = 2; i < rowNumberRead; i++)
                 {
+                    string currentSheet = ((rangeRead.Cells[i, readThisColumn] as Excel.Range).Value2).Replace('/', '-');
+                    Console.WriteLine(i);
+                    if (previousSheet.Equals(currentSheet))
+                    {
 
-                    WriteInSheet(i, counter);
+                        WriteInSheet(i, counter);
 
-                    counter++;
+                        counter++;
+                    }
+                    else
+                    {
+                        counter = 1;
+                        xlWorkSheetWrite = (Excel.Worksheet)xlApp.Worksheets.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
+                        xlWorkSheetWrite.Name = currentSheet;
+                        previousSheet = currentSheet;
+
+                        WriteInSheet(i, counter);
+
+                        counter++;
+                    }
                 }
-                else
-                {
-                    counter = 1;
-                    xlWorkSheetWrite = (Excel.Worksheet)xlApp.Worksheets.Add(Missing.Value, Missing.Value, Missing.Value, Missing.Value);
-                    xlWorkSheetWrite.Name = currentSheet;
-                    previousSheet = currentSheet;
-
-                    WriteInSheet(i, counter);
-
-                    counter++;
-                }
+                string p = path.Replace(".xlsx", "") + DateTime.Now.ToString(" dd.MM.yyyy hh.mm.ss") + ".xlsx";
+                xlApp.ActiveWorkbook.SaveAs(p);
             }
-            string p = path.Replace(".xlsx", "") + DateTime.Now.ToString(" dd.MM.yyyy hh.mm.ss") + ".xlsx";
-            xlApp.ActiveWorkbook.SaveAs(p);
-            xlWorkBookRead.Close(true, null, null);
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlWorkSheetWrite);
-            Marshal.ReleaseComObject(xlWorkSheetWrite);
-            Marshal.ReleaseComObject(xlWorkSheetRead);
-            Marshal.ReleaseComObject(xlWorkBookRead);
-            Marshal.ReleaseComObject(xlApp);
+
+            finally
+            {
+                xlWorkBookRead.Close(true, null, null);
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlWorkSheetWrite);
+                Marshal.ReleaseComObject(xlWorkSheetWrite);
+                Marshal.ReleaseComObject(xlWorkSheetRead);
+                Marshal.ReleaseComObject(xlWorkBookRead);
+                Marshal.ReleaseComObject(xlApp);
+            }
         }
 
         private static void WriteInSheet(int oldIndex,int newIndex)
